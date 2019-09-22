@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import {Button} from 'antd'
 export default class App extends Component {
     constructor(props){
         super(props);
@@ -18,7 +18,7 @@ export default class App extends Component {
     render() {
         return (
             <div>
-            {this.state.date}
+            <Button type='primary'>button</Button>
             </div>
         )
     }
