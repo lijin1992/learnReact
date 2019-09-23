@@ -1,4 +1,10 @@
 import React  from 'react';
 import reactDom from "react-dom";
-import Hoc from './Hoc'
-reactDom.render(<Hoc title='原本的title'/>, document.querySelector('#root'))
+import store from './store'
+import UserStore from './UserStore'
+import {Provider} from 'react-redux'
+reactDom.render((
+<Provider store={store}>
+    <UserStore/>
+</Provider>
+), document.querySelector('#root'))
