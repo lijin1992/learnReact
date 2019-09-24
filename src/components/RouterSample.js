@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import {BrowserRouter,Link,Route,Switch,Redirect} from 'react-router-dom'
+import {connect,Provider} from 'react-redux'
+import {login} from '../store/user.redux'
+import store from '../store'
 function App(){
     return (
         <div>
@@ -16,8 +19,9 @@ function App(){
             </ul>
             <Switch>
                 <Route exact path='/' component={Home}></Route>
-                <Route path='/about' component={About}></Route>
+                <PrivateRoute path='/about' component={About}></PrivateRoute>
                 <Route path='/detail/:cource' component={detail}></Route>
+                <Route path='/login' component={Login}></Route>
                 <Route  component={NoMatch}></Route>
             </Switch>
         </div>
@@ -66,12 +70,51 @@ function detail({match,history,location}){
         </div>
     )
 }
-
+//路由守卫
+@connect(
+    state =>({isLogin:state.user.isLogin}),
+)
+class PrivateRoute extends Component{
+    //({component:Component,...rest}){}
+    render(){
+        const Component = this.props.component
+        debugger
+        //redner和Component二选一
+        return <Route {...this.props} render={
+            (props)=>{
+                return this.props.isLogin?(<Component {...props}></Component>) : 
+                <Redirect to={{pathname:'/login',state:{from:props.location.pathname}}}></Redirect>
+            }
+        }></Route> 
+    }
+};
+@connect(
+    state =>({isLogin:state.user.isLogin}),
+    {login}
+)
+class Login extends Component{
+    render(){
+        debugger
+        const from = this.props.location.state?this.props.location.state.from:'/'
+        if(this.props.isLogin){
+            return <Redirect to={from}></Redirect>
+        }else{
+            return (
+                <div>
+                    <h2>请先登录</h2>
+                    <button onClick={this.props.login}>登录</button>
+                </div>
+            )
+        }
+    }
+};
 export default class RouterSample extends Component {
     render() {
         return (
             <BrowserRouter>
-                <App></App>
+                <Provider store={store}>
+                    <App></App>
+                </Provider>
             </BrowserRouter>
         )
     }
