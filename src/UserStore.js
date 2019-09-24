@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-
+import {add,minus,asyncAdd} from './store/count.redux'
 @connect(
-    state=>({num:state}),
+    state=>({num:state.count}),
     {
-        add:()=>({type:'add'}),
-        minus:()=>({type:'minus'}),
+        add,
+        minus,
+        asyncAdd
     }
 )
  class UserStore extends Component {
@@ -15,6 +16,7 @@ import {connect} from 'react-redux'
                 <p>{this.props.num}</p>
                <button onClick={()=>this.props.add()}>+</button>
                <button onClick={()=>this.props.minus()}>-</button>
+               <button onClick={()=>this.props.asyncAdd()}>async</button>
             </div>
         )
     }
